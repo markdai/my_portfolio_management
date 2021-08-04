@@ -1,0 +1,19 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+src/__pycache__/
+test/__pycache__/
+
+# Pycharm files
+.idea/
+venv/
+
+# Keep empty directories
+databases/*
+!databases/.gitkeep
+logs/*
+!logs/.gitkeep
+backup/*
+!backup/.gitkeep
+snapshots/*
+!snapshots/.gitkeep
