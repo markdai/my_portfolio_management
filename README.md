@@ -1,6 +1,6 @@
 # Investment Management
 
-Python package to manage Equity and Fixed Income transactions. 
+Python package to manage Equity and Fixed Income transactions, as well as generating portfolio allocation report.
 
 ## Getting Started
 
@@ -13,18 +13,18 @@ Python package to manage Equity and Fixed Income transactions.
 	* `fixed_income.py` the management module for Fixed Income;
 	* `overview_generator.py` the generator for Allocation Reports;
 * `test/` contains UnitTest for some basic modules.
-	* `test_FinAPI_utility.py`
-	* `test_eq_SQLite_utility.py`
-	* `test_fixed_SQLite_utility.py`
+	* `test_FinAPI_utility.py` unittest for src/FinAPI_utility.py
+	* `test_eq_SQLite_utility.py` unittest for src/eq_SQLite_utility.py
+	* `test_fixed_SQLite_utility.py` unittest for src/fixed_SQLite_utility.py
 * `templates/` contains SQLite Table Schema and View Query.
-	* `equity_tables_schema.json`
-	* `fixed_tables_schema.json`
-	* `equity_positions_view_query.sql`
-	* `fixed_positions_view_query.sql`
+	* `equity_tables_schema.json` Table schema for all tables in Equity database
+	* `fixed_tables_schema.json` Table schema for all tables in Fixed Income database
+	* `equity_positions_view_query.sql` VIEW query for "position" in Equity database 
+	* `fixed_positions_view_query.sql` VIEW query for "position" in Fixed Income database
 * `databases/` contains SQLite database instances.
-	* `equity.db`
-	* `fixed_income.db`
-	* `cash_equivalent.csv`
+	* `equity.db` SQLite database file for Equity holdings
+	* `fixed_income.db` SQLite database file for Fixed Income holdings
+	* `others.json` JSON file for Cash Equivalent and Mutual Fund holdings
 * `backup/` contains backup for :table: transaction in comma delimited CSV format.
 	* equity_transaction_backup_YYYYMMDD.csv
 	* fixed_transaction_backup_YYYYMMDD.csv
