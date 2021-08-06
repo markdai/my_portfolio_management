@@ -26,7 +26,7 @@ Examples:
 
 """
 import yfinance as yf
-from .overview_generator import this_fixed_income_etf
+from .overview_generator import this_fixed_income_etf, this_equity_etf
 
 
 class Stock(object):
@@ -51,7 +51,7 @@ class Stock(object):
         The :function: get_previous_close is used to get previous close price for a stock.
         """
         try:
-            if self.this_ticker not in this_fixed_income_etf.keys():
+            if self.this_ticker not in this_fixed_income_etf.keys() and self.this_ticker not in this_equity_etf.keys():
                 that_result = self.this_instance.info['previousClose']
                 return that_result
             else:
