@@ -1,4 +1,4 @@
-# Investment Management
+# Portfolio Management
 
 Python package to manage Equity and Fixed Income transactions, as well as generating portfolio allocation report.
 
