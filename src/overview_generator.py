@@ -337,7 +337,7 @@ class SummaryTool(object):
             self.logger.error('Failed to generate allocation report based on investment_type  -> '+str(e))
             raise e
 
-    def generate_mature_calender(self):
+        def generate_mature_calender(self):
         """Get mature calender for fixed income.
 
         Returns: :object: Pandas dataframe.
@@ -345,17 +345,21 @@ class SummaryTool(object):
         """
         self.logger.info('Generating Mature Calender for fixed income investment ...')
         try:
-            df_fixed = self._get_fixed_positions_data()[['SYMBOL', 'END_DATE', 'TOTAL_DOLLARS']]
+            df_fixed = self._get_fixed_positions_data()[['SYMBOL', 'END_DATE', 'TOTAL_DOLLARS', 'RETURN_RATE']]
             self.logger.info('Updating Pandas Dataframe column label ...')
-            df_fixed.columns = ['SYMBOL', 'MATURE_DATE', 'DOLLARS']
+            df_fixed.columns = ['SYMBOL', 'MATURE_DATE', 'DOLLARS', 'RETURN_RATE']
+            df_fixed['RETURN'] = df_fixed['DOLLARS']*df_fixed['RETURN_RATE']
             self.logger.info('Updating :column: MATURE_DATE format from YYYY-MM-DD to YYYY-MM ...')
             df_fixed['MATURE_DATE'] = df_fixed['MATURE_DATE'].apply(
                 lambda x: datetime.strptime(datetime.strptime(x, '%Y-%m-%d').strftime('%Y-%m'), '%Y-%m'))
-            self.logger.info('Calculating TOTAL_DOLLARS, TOTAL_COUNT and SYMBOL_REF for each MATURE_DATE ...')
+            self.logger.info('Calculating total Dollars, Counts, Returns, and average Yield for each MATURE_DATE ...')
             df_mature_calender = df_fixed.groupby(df_fixed['MATURE_DATE']).agg(
-                {'DOLLARS': ['sum', 'count'], 'SYMBOL':
-                    [lambda x: ', '.join([y.replace('n/a', 'CD-renew') for y in x])]}).reset_index()
-            df_mature_calender.columns = ['MATURE_DATE', 'TOTAL_DOLLARS', 'TOTAL_COUNT', 'SYMBOL_REF']
+                {'DOLLARS': ['sum', 'count'],
+                 'RETURN': ['sum'],
+                 'SYMBOL': [lambda x: ', '.join([y.replace('n/a', 'CD-renew') for y in x])]
+                 }).reset_index()
+            df_mature_calender.columns = ['MATURE_DATE', 'TOTAL_DOLLARS', 'TOTAL_COUNT', 'YIELD', 'SYMBOL_REF']
+            df_mature_calender['YIELD'] = df_mature_calender['YIELD']/df_mature_calender['TOTAL_DOLLARS']*100
             self.logger.info('Filtering Pandas Dataframe to exclude rows with MATURE_DATE < CURRENT_MONTH ...')
             _current_month = datetime.strptime(datetime.today().strftime('%Y-%m'), '%Y-%m')
             _delete_row = df_mature_calender[df_mature_calender['MATURE_DATE'] < _current_month].index
@@ -364,6 +368,7 @@ class SummaryTool(object):
             df_output = df_mature_calender.sort_values('MATURE_DATE', ascending=True).reset_index()
             self.logger.info('Formatting columns with float data type ...')
             df_output['TOTAL_DOLLARS'] = df_output['TOTAL_DOLLARS'].map('${:,.0f}'.format)
+            df_output['YIELD'] = df_output['YIELD'].map('{:.2f}%'.format)
             return df_output
         except Exception as e:
             self.logger.error('Failed to generate Mature Calender for fixed income investment  -> '+str(e))
