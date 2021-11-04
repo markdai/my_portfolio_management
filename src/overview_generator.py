@@ -337,7 +337,7 @@ class SummaryTool(object):
             self.logger.error('Failed to generate allocation report based on investment_type  -> '+str(e))
             raise e
 
-        def generate_mature_calender(self):
+    def generate_mature_calender(self):
         """Get mature calender for fixed income.
 
         Returns: :object: Pandas dataframe.
