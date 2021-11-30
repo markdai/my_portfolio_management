@@ -9,10 +9,6 @@ This module is the master for FinAPI_utility, eq_SQLite_utility
 Note:
     This module depend on following third party library:
      - pandas v0.25.0
-    to install:
-        pip3 install pandas
-        pip3 install lxml
-        pip3 install html5lib
 
 Examples:
     -- Update SQLite Database 'equity' based on Yahoo Finance.
@@ -49,13 +45,12 @@ Examples:
 
 """
 
-
 from datetime import datetime
 import os
 
 from .logger import UseLogging
 from .eq_SQLite_utility import SQLiteRequest
-from .FinAPI_utility import Stock, ETF
+from .financial_API_utility import Stock, ETF
 
 
 class DbCommands(object):
@@ -69,7 +64,7 @@ class DbCommands(object):
         with financial data.
         """
         _logger_ref = UseLogging(__name__)
-        self.logger = _logger_ref.use_loggers('investment_management')
+        self.logger = _logger_ref.use_loggers('portfolio_management')
         self.production_db_file = 'databases/equity.db'
         self._current_date = datetime.now().strftime('%Y%m%d')
         self.backup_db_file = f'equity_transaction_backup_{self._current_date}.csv'
@@ -186,18 +181,17 @@ class DbCommands(object):
         Return: none.
 
         """
+        _instance = SQLiteRequest(self.production_db_file)
         self.logger.info('Updating :table: tmp_holdings ...')
         try:
-            _instance_one = SQLiteRequest(self.production_db_file)
-            _instance_one.sync_table_holdings()
+            _instance.sync_table_holdings()
         except Exception as e:
             self.logger.error('Failed to update :table: tmp_holdings -> ' + str(e))
             raise e
         self.logger.info('Updating :table: watch_list ...')
         try:
-            _instance_two = SQLiteRequest(self.production_db_file)
-            _instance_two.sync_table_watch_list()
-            data_watch_list = [x for x in _instance_two.get_table_watch_list() if int(x['ENABLED']) == 1]
+            _instance.sync_table_watch_list()
+            data_watch_list = [x for x in _instance.get_table_watch_list() if int(x['ENABLED']) == 1]
             for i in range(len(data_watch_list)):
                 v_symbol = data_watch_list[i]['SYMBOL']
                 v_investment_type = data_watch_list[i]['INVESTMENT_TYPE']
@@ -205,20 +199,20 @@ class DbCommands(object):
                     v_prev_close, v_low_52wks, v_high_52wks, v_mkt_cap, v_pe, v_div, v_eps, v_forward_pe, \
                         v_forward_eps, v_sector, v_beta, v_short_float, v_name = self._get_stock_information(v_symbol)
                     v_total_assets, v_yield, v_category = 0, float('nan'), ''
-                    _instance_two.update_table_watch_list(v_symbol, v_name, v_investment_type, v_prev_close,
-                                                          v_low_52wks, v_high_52wks, v_mkt_cap, v_total_assets, v_pe,
-                                                          v_forward_pe, v_div, v_yield, v_eps, v_forward_eps, v_beta,
-                                                          v_short_float, v_sector, v_category
-                                                          )
+                    _instance.update_table_watch_list(v_symbol, v_name, v_investment_type, v_prev_close,
+                                                      v_low_52wks, v_high_52wks, v_mkt_cap, v_total_assets, v_pe,
+                                                      v_forward_pe, v_div, v_yield, v_eps, v_forward_eps, v_beta,
+                                                      v_short_float, v_sector, v_category
+                                                      )
                 elif v_investment_type.lower() == 'etf':
                     v_prev_close, v_low_52wks, v_high_52wks, v_mkt_cap, v_pe, v_div, v_eps, v_forward_pe, \
                         v_forward_eps, v_sector, v_beta, v_short_float, v_name, v_total_assets, v_yield, \
                         v_category = self._get_etf_information(v_symbol)
-                    _instance_two.update_table_watch_list(v_symbol, v_name, v_investment_type, v_prev_close,
-                                                          v_low_52wks, v_high_52wks, v_mkt_cap, v_total_assets,
-                                                          v_pe, v_forward_pe, v_div, v_yield, v_eps, v_forward_eps,
-                                                          v_beta, v_short_float, v_sector, v_category
-                                                          )
+                    _instance.update_table_watch_list(v_symbol, v_name, v_investment_type, v_prev_close,
+                                                      v_low_52wks, v_high_52wks, v_mkt_cap, v_total_assets,
+                                                      v_pe, v_forward_pe, v_div, v_yield, v_eps, v_forward_eps,
+                                                      v_beta, v_short_float, v_sector, v_category
+                                                      )
                 else:
                     self.logger.error("Investment type should be :string: stock/etf. Got {}: {}".format(
                         str(type(v_investment_type)), str(v_investment_type)

@@ -16,7 +16,6 @@ Examples:
     test_instance.create_table_transactions_fixed()
     test_instance.create_view_positions_fixed()
 
-
 """
 
 import csv
@@ -42,7 +41,7 @@ class FixedSQLiteRequest(SQLiteRequest):
         self.table_schema_file = "templates/fixed_tables_schema.json"
         self.view_query_positions = "templates/fixed_positions_view_query.sql"
         _logger_ref = UseLogging(__name__)
-        self.logger = _logger_ref.use_loggers('investment_management')
+        self.logger = _logger_ref.use_loggers('portfolio_management')
 
     def _read_json_schema_file(self, v_table_name):
         return super()._read_json_schema_file(v_table_name)

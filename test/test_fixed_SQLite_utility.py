@@ -1,5 +1,5 @@
 """
-This :module: contains Test Calls to :module: src/equity_SQLite_utility.
+This :module: contains Test Calls to :module: src/fixed_SQLite_utility.
 
     Original Author: Mark D
     Date created: 12/29/2019
@@ -7,11 +7,10 @@ This :module: contains Test Calls to :module: src/equity_SQLite_utility.
     Python Version: 3.7
 
 Note:
-    If you modified :fixed_SQLite_utility: modules in this package, you can test them by calling unittest
-    functions below.
+    none
 
 Examples:
-    python3 -m unittest test.test_fixed_SQLite_utility
+    python -m unittest test.test_fixed_SQLite_utility
 
 
 """
@@ -26,10 +25,6 @@ from src.fixed_SQLite_utility import FixedSQLiteRequest
 
 
 class TestFixedSQLiteRequests(unittest.TestCase):
-    """
-    The :class: TestFixedSQLiteRequests is child of python unittest class.
-        It can be used to test the functions in src/eq_SQLite_utility.py module.
-    """
     def setUp(self):
         """
         setup variables before each TestCase executed.
@@ -49,7 +44,7 @@ class TestFixedSQLiteRequests(unittest.TestCase):
 
     def test_init(self):
         """
-        TestCase for FixedSQLiteRequest.__init__.
+        TestCase for FixedSQLiteRequest.__init__().
         """
         _test_instance = FixedSQLiteRequest(self.test_db_file)
         self.assertEqual(_test_instance.db_file, self.test_db_file)

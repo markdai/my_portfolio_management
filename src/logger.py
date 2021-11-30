@@ -79,7 +79,8 @@ class UseLogging(object):
         _stream_handler = logging.StreamHandler()
         _stream_handler.setLevel(self._logging_level)
         _stream_handler.setFormatter(self._logging_format)
-        self._logger.addHandler(_stream_handler)
+        if not len(self._logger.handlers):
+            self._logger.addHandler(_stream_handler)
         return self._logger
 
     def use_file_logger(self, v_log_file_prefix):
@@ -97,7 +98,8 @@ class UseLogging(object):
                                             datetime.now().strftime('%Y%m%d_%H%M%S') + '.log')
         _file_handler.setLevel(self._logging_level)
         _file_handler.setFormatter(self._logging_format)
-        self._logger.addHandler(_file_handler)
+        if not len(self._logger.handlers):
+            self._logger.addHandler(_file_handler)
         return self._logger
 
     def use_loggers(self, v_log_file_prefix):

@@ -7,11 +7,10 @@ This :module: contains Test Calls to :module: src/eq_SQLite_utility.
     Python Version: 3.7
 
 Note:
-    If you modified :eq_SQLite_utility: modules in this package, you can test them by calling unittest
-    functions below.
+    none
 
 Examples:
-    python3 -m unittest test.test_eq_SQLite_utility
+    python -m unittest test.test_eq_SQLite_utility
 
 
 """
@@ -27,10 +26,6 @@ from src.eq_SQLite_utility import SQLiteRequest
 
 
 class TestSQLiteRequests(unittest.TestCase):
-    """
-    The :class: TestSQLiteRequests is child of python unittest class.
-        It can be used to test the functions in src/eq_SQLite_utility.py module.
-    """
     def setUp(self):
         """
         setup variables before each TestCase executed.
@@ -40,7 +35,7 @@ class TestSQLiteRequests(unittest.TestCase):
 
     def tearDown(self):
         """
-        drop temporary files after each TestCase finished.
+        drop test files after each TestCase finished.
         """
         if os.path.exists(self.test_db_file):
             sleep(5)
@@ -50,7 +45,7 @@ class TestSQLiteRequests(unittest.TestCase):
 
     def test_init(self):
         """
-        TestCase for SQLiteRequest.__init__.
+        TestCase for SQLiteRequest.__init__().
         """
         _test_instance = SQLiteRequest(self.test_db_file)
         self.assertEqual(_test_instance.db_file, self.test_db_file)
@@ -130,33 +125,6 @@ class TestSQLiteRequests(unittest.TestCase):
         with self.assertRaises(IOError):
             _test_instance.insert_into_table_transactions('AAPL', 1, '2018-12-31', 120.0, 10, 'stock', 'TD',
                                                           'Apple Inc')
-        with self.assertRaises(IOError):
-            _test_instance.insert_into_table_transactions('AAPL', 'SOME TEXT', '2018-12-31', 120.0, 10, 'stock', 'TD',
-                                                          'Apple Inc')
-        with self.assertRaises(IOError):
-            _test_instance.insert_into_table_transactions('AAPL', 'BUY', 1, 120.0, 10, 'stock', 'TD', 'Apple Inc')
-        with self.assertRaises(IOError):
-            _test_instance.insert_into_table_transactions('AAPL', 'BUY', 'SOME TEXT', 120.0, 10, 'stock', 'TD',
-                                                          'Apple Inc')
-        with self.assertRaises(IOError):
-            _test_instance.insert_into_table_transactions('AAPL', 'BUY', '2018-12-31', 'SOME TEXT', 10, 'stock', 'TD',
-                                                          'Apple Inc')
-        with self.assertRaises(IOError):
-            _test_instance.insert_into_table_transactions('AAPL', 'BUY', '2018-12-31', 1, 10, 'stock', 'TD',
-                                                          'Apple Inc')
-        with self.assertRaises(IOError):
-            _test_instance.insert_into_table_transactions('AAPL', 'BUY', '2018-12-31', 120.0, 'some text', 'stock',
-                                                          'TD', 'Apple Inc')
-        with self.assertRaises(IOError):
-            _test_instance.insert_into_table_transactions('AAPL', 'BUY', '2018-12-31', 120.0, 1.0, 'stock', 'TD',
-                                                          'Apple Inc')
-        with self.assertRaises(IOError):
-            _test_instance.insert_into_table_transactions('AAPL', 'BUY', '2018-12-31', 120.0, 10, 1, 'TD', 'Apple Inc')
-        with self.assertRaises(IOError):
-            _test_instance.insert_into_table_transactions('AAPL', 'BUY', '2018-12-31', 120.0, 10, 'stock', 1,
-                                                          'Apple Inc')
-        with self.assertRaises(IOError):
-            _test_instance.insert_into_table_transactions('AAPL', 'BUY', '2018-12-31', 120.0, 10, 'stock', 'TD', 1)
 
     def test_backup_table_transactions(self):
         """

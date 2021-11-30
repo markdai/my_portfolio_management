@@ -9,8 +9,6 @@ This module is the master for fixed_SQLite_utility
 Note:
     This module depend on following third party library:
      - pandas v0.25.0
-    to install:
-        pip3 install pandas
 
 Examples:
     -- Backup SQLite Database 'fixed_income' to 'backup/' directory.
@@ -44,7 +42,6 @@ Examples:
 
 """
 
-
 from datetime import datetime
 import os
 
@@ -63,7 +60,7 @@ class DbCommands(object):
         with financial data.
         """
         _logger_ref = UseLogging(__name__)
-        self.logger = _logger_ref.use_loggers('investment_management')
+        self.logger = _logger_ref.use_loggers('portfolio_management')
         self.production_db_file = 'databases/fixed_income.db'
         self._current_date = datetime.now().strftime('%Y%m%d')
         self.backup_db_file = f'fixed_transaction_backup_{self._current_date}.csv'

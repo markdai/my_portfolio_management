@@ -53,7 +53,7 @@ class SQLiteRequest(object):
         self.table_schema_file = "templates/equity_tables_schema.json"
         self.view_query_positions = "templates/equity_positions_view_query.sql"
         _logger_ref = UseLogging(__name__)
-        self.logger = _logger_ref.use_loggers('investment_management')
+        self.logger = _logger_ref.use_loggers('portfolio_management')
 
     def _read_json_schema_file(self, v_table_name):
         """
