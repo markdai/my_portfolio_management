@@ -1,41 +1,33 @@
 """
-This module is used to generate overview from db files for equity, fixed_income and hard-coded cash equivalent data.
+This module is used to generate overview from db files for equity, fixed_income and cash equivalent data.
 
     Original Author: Mark D
     Date created: 01/05/2019
-    Date Modified: 11/04/2021
+    Date Modified: 11/29/2021
     Python Version: 3.7
 
 Note:
     This module depend on following third party library:
      - pandas v0.25.0
-    to install:
-        pip3 install pandas
 
 Examples:
-    -- Generate allocation summary based on Investment Type:
+    -- Initialize class:
         from src.overview_generator import SummaryTool as SummaryTool
         this_instance = SummaryTool()
+
+    -- Generate allocation summary based on Investment Type:
         this_instance.generate_allocation_report_type()
 
     -- Generate allocation summary based on Broker:
-        from src.overview_generator import SummaryTool as SummaryTool
-        this_instance = SummaryTool()
         this_instance.generate_allocation_report_account()
 
     -- Generate allocation summary for Equity ETF:
-        from src.overview_generator import SummaryTool as SummaryTool
-        this_instance = SummaryTool()
         this_instance.generate_allocation_report_equity_etf()
 
     -- Generate allocation summary for Fixed Income ETF:
-        from src.overview_generator import SummaryTool as SummaryTool
-        this_instance = SummaryTool()
         this_instance.generate_allocation_report_fixed_etf()
 
     -- Generate Mature Calender for Fixed Income:
-        from src.overview_generator import SummaryTool as SummaryTool
-        this_instance = SummaryTool()
         this_instance.generate_mature_calender()
 
 """
@@ -43,6 +35,7 @@ Examples:
 from datetime import datetime
 import pandas as pd
 import numpy as np
+
 from .logger import UseLogging
 from .eq_SQLite_utility import SQLiteRequest as eq_SQLiteRequest
 from .fixed_SQLite_utility import FixedSQLiteRequest as fixed_SQLiteRequest
@@ -153,7 +146,7 @@ class SummaryTool(object):
         constructor for :class: SummaryTool.
         """
         _logger_ref = UseLogging(__name__)
-        self.logger = _logger_ref.use_loggers('investment_management')
+        self.logger = _logger_ref.use_loggers('portfolio_management')
         self.eq_db_file = 'databases/equity.db'
         self.fixed_db_file = 'databases/fixed_income.db'
         self.other_investment_file = 'databases/others.json'

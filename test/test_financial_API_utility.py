@@ -1,34 +1,28 @@
 """
-This :module: contains Test Calls to :module: src/FinAPI_utility.py.
+This :module: contains Test Calls to :module: src/financial_API_utility.py.
 
     Original Author: Mark D
     Date created: 07/31/2021
-    Date Modified: 08/01/2021
+    Date Modified: 11/19/2021
     Python Version: 3.7
 
 Note:
-    This test script can be used to validate of FinAPI_utility.py still working.
+    none
 
 Examples:
-    python3 -m unittest test.test_FinAPI_utility
+    python -m unittest test.test_financial_API_utility
 
 
 """
 
 import unittest
-
-from src.FinAPI_utility import Stock, ETF
+from src.financial_API_utility import Stock, ETF
 
 
 class TestFinAPI(unittest.TestCase):
-    """
-    The :class: TestFinAPI is child of python unittest class.
-        It can be used to test the functions in src/FinAPI_utility.py module.
-    """
-
     def test_init_stock(self):
         """
-        TestCase for Stock.__init__.
+        TestCase for Stock.__init__().
         """
         try:
             _test_stock_instance = Stock('AAPL')

@@ -3,7 +3,7 @@ This is the master module for this package.
 
     Original Author: Mark D
     Date created: 12/08/2019
-    Date Modified: 01/28/2021
+    Date Modified: 11/19/2021
     Python Version: 3.7
 
 Examples:
@@ -196,14 +196,14 @@ def master_overview():
                             this_allocation_report_type.to_html(index=False) + \
                             '\n<br>\n<h3>Allocation Report - Broker </h3>' + \
                             this_allocation_report_account.to_html(index=False) + \
-                            '\n<br>\n<h3>Allocation Report - Equity ETF </h3>' + \
-                            this_allocation_report_equity_etf.to_html(index=False) + \
-                            '\n<br>\n<h3>Allocation Report - Fixed Income ETF </h3>' + \
-                            this_allocation_report_fixed_etf.to_html(index=False) + \
                             '\n<br>\n<h3>Allocation Report - Vanguard </h3>' + \
                             this_allocation_report_etf_at_vanguard.to_html(index=False) + \
                             '\n<br>\n<h3>Allocation Report - Charles Schwab </h3>' + \
                             this_allocation_report_etf_at_schwab.to_html(index=False) + \
+                            '\n<br>\n<h3>Allocation Report - Equity ETF </h3>' + \
+                            this_allocation_report_equity_etf.to_html(index=False) + \
+                            '\n<br>\n<h3>Allocation Report - Fixed Income ETF </h3>' + \
+                            this_allocation_report_fixed_etf.to_html(index=False) + \
                             '\n<br>\n<h3>Allocation Report - Individual Stock </h3>' + \
                             this_allocation_report_equity_stock.to_html(index=False) + \
                             '\n<br>\n<h3>Fixed Income Mature Calender</h3>' + \

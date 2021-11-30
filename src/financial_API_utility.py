@@ -10,11 +10,6 @@ Note:
     This module depend on following third party library:
      - yfinance v0.1.55+
      - pandas v0.25.0
-    to install:
-        pip3 install lxml
-        pip3 install html5lib
-        pip3 install pandas
-        pip3 install yfinance
 
 Examples:
     test_df = Stock('AAPL')
@@ -25,7 +20,9 @@ Examples:
     ...
 
 """
+
 import yfinance as yf
+
 from .overview_generator import this_fixed_income_etf, this_equity_etf
 
 
