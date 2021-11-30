@@ -6,16 +6,19 @@ Python package to manage Equity and Fixed Income transactions, as well as genera
 
 * `src/` contains all basic modules for this package.
 	* `logger.py` the logger constructor;
-	* `FinAPI_utility.py` the Yahoo Finance API connector;
-	* `eq_SQLite_utility.py` the SQLite connector for Equity;
-	* `fixed_SQLite_utility.py`  the SQLite connector for Fixed Income;
-	* `equity.py` the management module for Equity;
-	* `fixed_income.py` the management module for Fixed Income;
-	* `overview_generator.py` the generator for Allocation Reports;
+	* `financial_API_utility.py` the Yahoo Finance API connector
+	* `eq_SQLite_utility.py` the SQLite connector for Equity
+	* `fixed_SQLite_utility.py`  the SQLite connector for Fixed Income
+	* `equity.py` the management module for Equity
+	* `fixed_income.py` the management module for Fixed Income
+	* `overview_generator.py` the generator for Allocation Reports
 * `test/` contains UnitTest for some basic modules.
-	* `test_FinAPI_utility.py` unittest for src/FinAPI_utility.py
+	* `test_financial_API_utility.py` unittest for src/financial_API_utility.py
 	* `test_eq_SQLite_utility.py` unittest for src/eq_SQLite_utility.py
 	* `test_fixed_SQLite_utility.py` unittest for src/fixed_SQLite_utility.py
+	* `test_equity.py` unittest for src/equity.py
+	* `test_fixed_income.py` unittest for src/fixed_income.py
+	* `test_overview_generator.py` unittest for src/overview_generator.py
 * `templates/` contains SQLite Table Schema and View Query.
 	* `equity_tables_schema.json` Table schema for all tables in Equity database
 	* `fixed_tables_schema.json` Table schema for all tables in Fixed Income database
@@ -36,8 +39,7 @@ Python package to manage Equity and Fixed Income transactions, as well as genera
 
 ## Prerequisites
 
-python v3.6+  
-pip
+python v3.7
 
 ### Installing
 
