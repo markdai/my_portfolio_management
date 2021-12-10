@@ -41,7 +41,7 @@ from .eq_SQLite_utility import SQLiteRequest as eq_SQLiteRequest
 from .fixed_SQLite_utility import FixedSQLiteRequest as fixed_SQLiteRequest
 
 
-this_fixed_income_etf = {
+this_fixed_income_funds = {
     'VGSH': ['Vanguard Short-Term Treasury Index Fund',
              'Short-Term Fixed Income', 'Treasury'
              ],
@@ -71,10 +71,12 @@ this_fixed_income_etf = {
             ],
     'VTIP': ['Vanguard Short-Term Inflation Protected Securities',
              'Short-Term Fixed Income', 'Inflation-protected'
-             ]
+             ],
+    'PIMIX': ['PIMCO Income Fund Institutional Class',
+              'Multi-sector Fixed Income', 'Multi-sector']
 }
 
-this_equity_etf = {
+this_equity_funds = {
     'VOO': ['Vanguard S&P 500 Index Fund',
             'Large-Cap', 'Blend'
             ],
@@ -240,7 +242,8 @@ class SummaryTool(object):
         try:
             df_input = pd.read_json(self.other_investment_file, orient='records')
             df_output = pd.DataFrame(df_input,
-                                     columns=['DESCRIPTION', 'MAJOR_TYPE', 'MINOR_TYPE', 'DOLLARS', 'ACCOUNT'])
+                                     columns=['SUFFIX', 'DESCRIPTION', 'MAJOR_TYPE', 'MINOR_TYPE',
+                                              'DOLLARS', 'ACCOUNT'])
             return df_output
         except Exception as e:
             self.logger.error(f'Failed to retrieve data from {self.other_investment_file} -> '+str(e))
@@ -255,7 +258,7 @@ class SummaryTool(object):
 
         def _set_major_investment_type_equity(v_symbol):
             """Set MAJOR_TYPE based on SYMBOL for Equity entries"""
-            if v_symbol.upper() in list(this_fixed_income_etf.keys()):
+            if v_symbol.upper() in list(this_fixed_income_funds.keys()):
                 out_major_type = 'FIXED_INCOME'
             else:
                 out_major_type = 'EQUITY'
@@ -411,6 +414,7 @@ class SummaryTool(object):
             self.logger.error('Failed to generate Allocation report based on ACCOUNT  -> '+str(e))
             raise e
 
+    '''
     def generate_allocation_report_equity_etf(self):
         """Get allocation report for Equity ETF.
 
@@ -419,8 +423,8 @@ class SummaryTool(object):
         """
         def _set_equity_etf_asset_class(v_symbol, v_index):
             """Set Equity ETF Asset Class based on SYMBOL"""
-            if v_symbol.upper() in list(this_equity_etf.keys()):
-                out_asset_class = this_equity_etf.get(v_symbol.upper())[v_index]
+            if v_symbol.upper() in list(this_equity_funds.keys()):
+                out_asset_class = this_equity_funds.get(v_symbol.upper())[v_index]
             else:
                 out_asset_class = 'Others'
             return out_asset_class
@@ -432,7 +436,7 @@ class SummaryTool(object):
             df_eq = self._get_eq_positions_data()[['SYMBOL', 'INVESTMENT_TYPE', 'MKT_VALUE']]
             df_eq.columns = ['SYMBOL', 'INVESTMENT_TYPE', 'DOLLARS']
             df_combined = df_eq[((df_eq['INVESTMENT_TYPE'] == 'ETF') | (df_eq['INVESTMENT_TYPE'] == 'etf')) &
-                                (~df_eq['SYMBOL'].isin(list(this_fixed_income_etf.keys())))]
+                                (~df_eq['SYMBOL'].isin(list(this_fixed_income_funds.keys())))]
             df_combined['ASSET_CLASS'] = df_combined['SYMBOL'].apply(lambda x: _set_equity_etf_asset_class(x, 1))
             df_combined['SUBCLASS'] = df_combined['SYMBOL'].apply(lambda x: _set_equity_etf_asset_class(x, 2))
             df_allocation_class = df_combined['DOLLARS'].groupby(
@@ -494,8 +498,8 @@ class SummaryTool(object):
         """
         def _set_fixed_etf_asset_class(v_symbol, v_index):
             """Set Fixed Income ETF Asset Class based on SYMBOL"""
-            if v_symbol.upper() in list(this_fixed_income_etf.keys()):
-                out_asset_class = this_fixed_income_etf.get(v_symbol.upper())[v_index]
+            if v_symbol.upper() in list(this_fixed_income_funds.keys()):
+                out_asset_class = this_fixed_income_funds.get(v_symbol.upper())[v_index]
             else:
                 out_asset_class = 'Others'
             return out_asset_class
@@ -506,7 +510,7 @@ class SummaryTool(object):
             df_fixed = self._get_eq_positions_data()[['SYMBOL', 'INVESTMENT_TYPE', 'MKT_VALUE']]
             df_fixed.columns = ['SYMBOL', 'INVESTMENT_TYPE', 'DOLLARS']
             df_combined = df_fixed[((df_fixed['INVESTMENT_TYPE'] == 'ETF') | (df_fixed['INVESTMENT_TYPE'] == 'etf')) &
-                                   (df_fixed['SYMBOL'].isin(list(this_fixed_income_etf.keys())))]
+                                   (df_fixed['SYMBOL'].isin(list(this_fixed_income_funds.keys())))]
             df_combined['ASSET_CLASS'] = df_combined['SYMBOL'].apply(lambda x: _set_fixed_etf_asset_class(x, 1))
             df_combined['SUBCLASS'] = df_combined['SYMBOL'].apply(lambda x: _set_fixed_etf_asset_class(x, 2))
             df_allocation_class = df_combined['DOLLARS'].groupby(
@@ -559,6 +563,7 @@ class SummaryTool(object):
         except Exception as e:
             self.logger.error('Failed to generate allocation report for Fixed Income ETF -> '+str(e))
             raise e
+    '''
 
     def generate_allocation_report_equity_stock(self):
         """Get allocation report for Equity Stock.
@@ -598,12 +603,12 @@ class SummaryTool(object):
         Return: :object: Pandas DataFrame.
 
         """
-        def _set_etf_asset_class(v_symbol, v_index):
+        def _set_asset_class(v_symbol, v_index):
             """Set ETF Asset Class based on SYMBOL"""
-            if v_symbol.upper() in list(this_equity_etf.keys()):
-                out_asset_class = this_equity_etf.get(v_symbol.upper())[v_index]
-            elif v_symbol.upper() in list(this_fixed_income_etf.keys()):
-                out_asset_class = this_fixed_income_etf.get(v_symbol.upper())[v_index]
+            if v_symbol.upper() in list(this_equity_funds.keys()):
+                out_asset_class = this_equity_funds.get(v_symbol.upper())[v_index]
+            elif v_symbol.upper() in list(this_fixed_income_funds.keys()):
+                out_asset_class = this_fixed_income_funds.get(v_symbol.upper())[v_index]
             else:
                 out_asset_class = 'Others'
             return out_asset_class
@@ -616,13 +621,16 @@ class SummaryTool(object):
                                                          df_transactions['UNITS'],
                                                          -1 * df_transactions['UNITS'])
             df_positions = self._get_eq_positions_data()[['SYMBOL', 'DESCRIPTION', 'INVESTMENT_TYPE', 'DOLLARS']]
-            df_other_investment = self._get_other_investment_information()[['DESCRIPTION', 'MAJOR_TYPE', 'ACCOUNT',
-                                                                            'DOLLARS']]
+            df_other_investment = self._get_other_investment_information()[['SUFFIX', 'MAJOR_TYPE', 'MINOR_TYPE',
+                                                                            'ACCOUNT', 'DOLLARS']]
             df_cash_equivalent = df_other_investment[(df_other_investment['ACCOUNT'] == v_account) &
                                                      (df_other_investment['MAJOR_TYPE'] == 'Cash Equivalent'
                                                       )].groupby(['MAJOR_TYPE'])['DOLLARS'].sum().\
                 reset_index(name='TOTAL_DOLLARS')
             df_cash_equivalent.columns = ['ASSET_CLASS', 'DOLLARS']
+            df_mutual_fund = df_other_investment[(df_other_investment['ACCOUNT'] == v_account) &
+                                                 (df_other_investment['MAJOR_TYPE'] != 'Cash Equivalent')]
+            df_mutual_fund.columns = ['SYMBOL', 'MAJOR_TYPE', 'INVESTMENT_TYPE', 'ACCOUNT', 'DOLLARS']
             df_eq = df_transactions.groupby(['SYMBOL', 'ACCOUNT'])['ADJUSTED_UNITS'].sum().\
                 reset_index(name='TOTAL_UNITS').query('TOTAL_UNITS > 0').\
                 join(df_positions.set_index('SYMBOL'), on='SYMBOL')
@@ -630,8 +638,9 @@ class SummaryTool(object):
             df_final = df_eq[(df_eq['ACCOUNT'] == v_account)][['SYMBOL', 'INVESTMENT_TYPE', 'TOTAL_DOLLARS']]
             df_final.columns = ['SYMBOL', 'INVESTMENT_TYPE', 'DOLLARS']
             df_combined = df_final[((df_final['INVESTMENT_TYPE'] == 'ETF') | (df_final['INVESTMENT_TYPE'] == 'etf'))]
-            df_combined['ASSET_CLASS'] = df_combined['SYMBOL'].apply(lambda x: _set_etf_asset_class(x, 1))
-            df_combined['SUBCLASS'] = df_combined['SYMBOL'].apply(lambda x: _set_etf_asset_class(x, 2))
+            df_combined = df_combined.append(df_mutual_fund[['SYMBOL', 'INVESTMENT_TYPE', 'DOLLARS']], ignore_index=True)
+            df_combined['ASSET_CLASS'] = df_combined['SYMBOL'].apply(lambda x: _set_asset_class(x, 1))
+            df_combined['SUBCLASS'] = df_combined['SYMBOL'].apply(lambda x: _set_asset_class(x, 2))
             if df_cash_equivalent.shape[0] > 0:
                 df_cash_equivalent['SYMBOL'] = 'n/a'
                 df_cash_equivalent['INVESTMENT_TYPE'] = 'Cash'
