@@ -165,11 +165,12 @@ def master_overview():
             lambda x: '//strong/' + str(x) + '/strong//')
         # call function to generate account allocation report
         this_allocation_report_account = this_instance.generate_allocation_report_account()
+        '''
         # call function to generate equity ETF allocation report
         this_allocation_report_equity_etf = this_instance.generate_allocation_report_equity_etf()
-        # call function to generate equity ETF allocation report
         this_allocation_report_equity_etf.iloc[-1] = this_allocation_report_equity_etf.iloc[-1].apply(
             lambda x: '//strong/' + str(x) + '/strong//')
+        '''
         # call function to generate ETF allocation report in :broker: Vanguard
         this_allocation_report_etf_at_vanguard = this_instance.generate_allocation_report_etf_w_account(
             'Vanguard')
@@ -180,10 +181,12 @@ def master_overview():
             'Schwab')
         this_allocation_report_etf_at_schwab.iloc[-1] = this_allocation_report_etf_at_schwab.iloc[-1].apply(
             lambda x: '//strong/' + str(x) + '/strong//')
+        '''
         # call function to generate Fixed Income ETF allocation report
         this_allocation_report_fixed_etf = this_instance.generate_allocation_report_fixed_etf()
         this_allocation_report_fixed_etf.iloc[-1] = this_allocation_report_fixed_etf.iloc[-1].apply(
             lambda x: '//strong/' + str(x) + '/strong//')
+        '''
         # call function to generate individual Stock holding list
         this_allocation_report_equity_stock = this_instance.generate_allocation_report_equity_stock()
         this_allocation_report_equity_stock.iloc[-1] = this_allocation_report_equity_stock.iloc[-1].apply(
@@ -200,10 +203,6 @@ def master_overview():
                             this_allocation_report_etf_at_vanguard.to_html(index=False) + \
                             '\n<br>\n<h3>Allocation Report - Charles Schwab </h3>' + \
                             this_allocation_report_etf_at_schwab.to_html(index=False) + \
-                            '\n<br>\n<h3>Allocation Report - Equity ETF </h3>' + \
-                            this_allocation_report_equity_etf.to_html(index=False) + \
-                            '\n<br>\n<h3>Allocation Report - Fixed Income ETF </h3>' + \
-                            this_allocation_report_fixed_etf.to_html(index=False) + \
                             '\n<br>\n<h3>Allocation Report - Individual Stock </h3>' + \
                             this_allocation_report_equity_stock.to_html(index=False) + \
                             '\n<br>\n<h3>Fixed Income Mature Calender</h3>' + \
