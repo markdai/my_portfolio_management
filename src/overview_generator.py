@@ -43,41 +43,50 @@ from .fixed_SQLite_utility import FixedSQLiteRequest as fixed_SQLiteRequest
 
 this_fixed_income_funds = {
     'VGSH': ['Vanguard Short-Term Treasury Index Fund',
-             'Short-Term Fixed Income', 'Treasury'
+             'Fixed Income', 'Short-Term Treasury'
              ],
     'VGIT': ['Vanguard Intermediate-Term Treasury Index Fund',
-             'Intermediate-Term Fixed Income', 'Treasury'
+             'Fixed Income', 'Intermediate-Term Treasury'
              ],
     'VGLT': ['Vanguard Long-Term Treasury Index Fund',
-             'Long-Term Fixed Income', 'Treasury'
+             'Fixed Income', 'Long-Term Treasury'
              ],
     'VCSH': ['Vanguard Short-Term Corporate Bond Index Fund',
-             'Short-Term Fixed Income', 'Corporate'
+             'Fixed Income', 'Short-Term Corporate'
              ],
     'VCIT': ['Vanguard Intermediate-Term Corporate Bond Index Fund',
-             'Intermediate-Term Fixed Income', 'Corporate'
+             'Fixed Income', 'Intermediate-Term Corporate'
              ],
     'VCLT': ['Vanguard Long-Term Corporate Bond Index Fund',
-             'Long-Term Fixed Income', 'Corporate'
+             'Fixed Income', 'Long-Term Corporate'
              ],
     'BSV': ['Vanguard Short-Term Bond Index Fund',
-            'Short-Term Fixed Income', 'Blend'
+            'Fixed Income', 'Short-Term Blend'
             ],
     'BIV': ['Vanguard Intermediate-Term Bond Index Fund',
-            'Intermediate-Term Fixed Income', 'Blend'
+            'Fixed Income', 'Intermediate-Term Blend'
             ],
     'BLV': ['Vanguard Long-Term Bond Index Fund',
-            'Long-Term Fixed Income', 'Blend'
+            'Fixed Income', 'Long-Term Blend'
             ],
     'VTIP': ['Vanguard Short-Term Inflation Protected Securities',
-             'Short-Term Fixed Income', 'Inflation-protected'
+             'Fixed Income', 'Short-Term Inflation-protected'
              ],
     'PIMIX': ['PIMCO Income Fund Institutional Class',
-              'Multi-sector Fixed Income', 'Multi-sector']
+              'Fixed Income', 'Multi-sector'
+              ],
+    'BHYAX': ['BlackRock High Yield Bond Portfolio Investor A Shares',
+              'Fixed Income', 'High-Yield'
+              ],
+    'VWEHX': ['Vanguard High-Yield Corporate Fund Investor Shares',
+              'Fixed Income', 'High-Yield']
 }
 
 this_equity_funds = {
     'VOO': ['Vanguard S&P 500 Index Fund',
+            'Large-Cap', 'Blend'
+            ],
+    'IVV': ['iShares Core S&P 500 ETF',
             'Large-Cap', 'Blend'
             ],
     'VIG': ['Vanguard Dividend Appreciation Index Fund',
@@ -92,6 +101,9 @@ this_equity_funds = {
     'VO': ['Vanguard Mid-Cap Index Fund',
            'Mid-Cap', 'Blend'
            ],
+    'IJH': ['iShares Core S&P Mid-Cap Index Fund',
+            'Mid-Cap', 'Blend'
+            ],
     'VOE': ['Vanguard Mid-Cap Value Index Fund',
             'Mid-Cap', 'Value'
             ],
@@ -101,6 +113,9 @@ this_equity_funds = {
     'VB': ['Vanguard Small-Cap Index Fund',
            'Small-Cap', 'Blend'
            ],
+    'SCHA': ['Schwab US Small-Cap Index Fund',
+             'Small-Cap', 'Blend'
+             ],
     'VBR': ['Vanguard Small-Cap Value Index Fund',
             'Small-Cap', 'Value'
             ],
@@ -129,6 +144,9 @@ this_equity_funds = {
             'Sector-Specific Equity', 'Industrial'
             ],
     'VIGI': ['Vanguard International Dividend Appreciate ETF',
+             'Foreign Equity', 'Large Blend'
+             ],
+    'VXUS': ['Vanguard Total International Stock ETF',
              'Foreign Equity', 'Large Blend'
              ],
     'VEA': ['Vanguard FTSE Developed Markets ETF',
