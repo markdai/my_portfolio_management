@@ -507,8 +507,8 @@ class SQLiteRequest(object):
             raise IOError("10th :argument: v_forward_pe should be a float. Got {}: {}".format(
                 str(type(v_forward_pe)), str(v_forward_pe))
             )
-        if not isinstance(v_div, float):
-            raise IOError("11th :argument: v_div should be a float. Got {}: {}".format(
+        if not isinstance(v_div, float) and not isinstance(v_div, int):
+            raise IOError("11th :argument: v_div should be a float or integer. Got {}: {}".format(
                 str(type(v_div)), str(v_div))
             )
         if not isinstance(v_yield, float):
@@ -558,7 +558,7 @@ class SQLiteRequest(object):
                                              str(round(v_total_assets/1000000000, 2))+' bil',
                                              round(float(v_pe), 2),
                                              round(float(v_forward_pe), 2),
-                                             round(v_div, 4),
+                                             round(float(v_div), 4),
                                              round(v_yield, 4),
                                              round(float(v_eps), 2),
                                              round(float(v_forward_eps), 2),

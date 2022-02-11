@@ -75,6 +75,9 @@ this_fixed_income_funds = {
     'PIMIX': ['PIMCO Income Fund Institutional Class',
               'Fixed Income', 'Multi-sector'
               ],
+    'DODIX': ['Dodge & Cox Income Fund',
+              'Fixed Income', 'Intermediate-Term Blend'
+              ],
     'BHYAX': ['BlackRock High Yield Bond Portfolio Investor A Shares',
               'Fixed Income', 'High-Yield'
               ],
@@ -689,7 +692,7 @@ class SummaryTool(object):
                  'SUBCLASS_TOTAL_DOLLARS': float('nan'),
                  'SUBCLASS_ALLOCATION': float('nan')}, ignore_index=True)
             self.logger.info('Formatting columns with float data type ...')
-            df_output['ASSET_CLASS_ALLOCATION'] = df_output['ASSET_CLASS_ALLOCATION'].map('{:.2f}%'.format)
+            df_output['ASSET_CLASS_ALLOCATION'] = df_output['ASSET_CLASS_ALLOCATION'].map('{:.1f}%'.format)
             df_output['SUBCLASS_ALLOCATION'] = df_output['SUBCLASS_ALLOCATION'].map('{:.2f}%'.format)
             df_output['ASSET_CLASS_TOTAL_DOLLARS'] = df_output['ASSET_CLASS_TOTAL_DOLLARS'].map('${:,.0f}'.format)
             df_output['SUBCLASS_TOTAL_DOLLARS'] = df_output['SUBCLASS_TOTAL_DOLLARS'].map('${:,.0f}'.format)
