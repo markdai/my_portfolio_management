@@ -285,18 +285,43 @@ class SummaryTool(object):
                 out_major_type = 'EQUITY'
             return out_major_type
 
+        def _set_minor_investment_type_equity(v_symbol, v_minor_type):
+            """Set MINOR_TYPE based on SYMBOL and INVESTMENT_TYPE for Equity entries"""
+            if v_minor_type.lower() == 'stock':
+                out_minor_type = 'Individual Stock'
+            elif v_minor_type.lower() == 'etf' and v_symbol.upper() in list(this_equity_funds.keys()):
+                out_minor_type = this_equity_funds.get(v_symbol.upper())[1]
+            elif v_minor_type.lower() == 'etf' and v_symbol.upper() in list(this_fixed_income_funds.keys()):
+                out_minor_type = this_fixed_income_funds.get(v_symbol.upper())[2]
+            else:
+                out_minor_type = 'Others'
+            return out_minor_type
+
+        def _set_minor_investment_type_others(v_symbol, v_major_type, v_minor_type):
+            """Set MINOR_TYPE based on SYMBOL and MINOR type for Other entries"""
+            if v_minor_type.lower() == 'mutual fund' and v_major_type.lower() == 'fixed_income' and v_symbol.upper() in list(this_fixed_income_funds.keys()):
+                out_minor_type = this_fixed_income_funds.get(v_symbol.upper())[2]
+            else:
+                out_minor_type = v_minor_type
+            return out_minor_type
+
         self.logger.info('Generating Allocation report based on investment_type ...')
         try:
             df_eq = self._get_eq_positions_data()[['SYMBOL', 'INVESTMENT_TYPE', 'MKT_VALUE']]
             df_fixed = self._get_fixed_positions_data()[['SYMBOL', 'INVESTMENT_TYPE', 'TOTAL_DOLLARS']]
-            df_other_investment = self._get_other_investment_information()[['DESCRIPTION', 'MAJOR_TYPE',
+            df_other_investment = self._get_other_investment_information()[['SUFFIX', 'DESCRIPTION', 'MAJOR_TYPE',
                                                                             'MINOR_TYPE', 'DOLLARS']]
             df_eq.columns = ['SYMBOL', 'MINOR_TYPE', 'DOLLARS']
             df_fixed.columns = ['SYMBOL', 'MINOR_TYPE', 'DOLLARS']
-            df_other_investment.columns = ['SYMBOL', 'MAJOR_TYPE', 'MINOR_TYPE', 'DOLLARS']
+            df_other_investment.columns = ['SUFFIX', 'DESCRIPTION', 'MAJOR_TYPE', 'MINOR_TYPE', 'DOLLARS']
             self.logger.info('Applying logic to build :column: MAJOR_TYPE ...')
             df_eq['MAJOR_TYPE'] = df_eq['SYMBOL'].apply(lambda x: _set_major_investment_type_equity(x))
             df_fixed['MAJOR_TYPE'] = 'FIXED_INCOME'
+            self.logger.info('Applying logic to build :column: MINOR_TYPE ...')
+            df_eq['MINOR_TYPE'] = df_eq.apply(
+                lambda x: _set_minor_investment_type_equity(x['SYMBOL'], x['MINOR_TYPE']), axis=1)
+            df_other_investment['MINOR_TYPE'] = df_other_investment.apply(
+                lambda x: _set_minor_investment_type_others(x['SUFFIX'], x['MAJOR_TYPE'], x['MINOR_TYPE']), axis=1)
             self.logger.info('Preparing allocation summary ...')
             df_combined = pd.concat([
                 df_eq[['MAJOR_TYPE', 'MINOR_TYPE', 'DOLLARS']],
@@ -328,7 +353,7 @@ class SummaryTool(object):
                     'MINOR_ALLOCATION': float('nan')}, ignore_index=True)
             self.logger.info('Formatting columns with float data type ...')
             df_output['MAJOR_ALLOCATION'] = df_output['MAJOR_ALLOCATION'].map('{:.0f}%'.format)
-            df_output['MINOR_ALLOCATION'] = df_output['MINOR_ALLOCATION'].map('{:.0f}%'.format)
+            df_output['MINOR_ALLOCATION'] = df_output['MINOR_ALLOCATION'].map('{:.2f}%'.format)
             df_output['MAJOR_TOTAL_DOLLARS'] = df_output['MAJOR_TOTAL_DOLLARS'].map('${:,.0f}'.format)
             df_output['MINOR_TOTAL_DOLLARS'] = df_output['MINOR_TOTAL_DOLLARS'].map('${:,.0f}'.format)
             self.logger.info('Making Pandas Dataframe easy to read ...')
@@ -382,7 +407,7 @@ class SummaryTool(object):
             _delete_row = df_mature_calender[df_mature_calender['MATURE_DATE'] < _current_month].index
             df_mature_calender = df_mature_calender.drop(_delete_row)
             df_mature_calender['MATURE_DATE'] = df_mature_calender['MATURE_DATE'].apply(lambda x: x.strftime('%Y-%m'))
-            df_output = df_mature_calender.sort_values('MATURE_DATE', ascending=True).reset_index()
+            df_output = df_mature_calender.sort_values('MATURE_DATE', ascending=True).reset_index(drop=True)
             self.logger.info('Formatting columns with float data type ...')
             df_output['TOTAL_DOLLARS'] = df_output['TOTAL_DOLLARS'].map('${:,.0f}'.format)
             df_output['YIELD'] = df_output['YIELD'].map('{:.2f}%'.format)
@@ -652,6 +677,15 @@ class SummaryTool(object):
             df_mutual_fund = df_other_investment[(df_other_investment['ACCOUNT'] == v_account) &
                                                  (df_other_investment['MAJOR_TYPE'] != 'Cash Equivalent')]
             df_mutual_fund.columns = ['SYMBOL', 'MAJOR_TYPE', 'INVESTMENT_TYPE', 'ACCOUNT', 'DOLLARS']
+            df_fixed_trans = self._get_fixed_transactions_data()[['TOTAL_DOLLARS', 'END_DATE', 'INVESTMENT_TYPE', 'ACCOUNT']]
+            df_fixed_trans.columns = ['DOLLARS', 'END_DATE', 'TYPE', 'ACCOUNT']
+            df_fixed_trans['END_DATE'] = df_fixed_trans['END_DATE'].apply(lambda x: datetime.strptime(x, '%Y-%m-%d'))
+            _current_month = datetime.strptime(datetime.today().strftime('%Y-%m-%d'), '%Y-%m-%d')
+            _delete_row = df_fixed_trans[df_fixed_trans['END_DATE'] < _current_month].index
+            df_fixed_trans = df_fixed_trans.drop(_delete_row)
+            df_fixed = df_fixed_trans[(df_fixed_trans['ACCOUNT'] == v_account)][['DOLLARS', 'TYPE']]
+            df_fixed_final = df_fixed['DOLLARS'].groupby(
+                df_fixed['TYPE']).sum().reset_index()
             df_eq = df_transactions.groupby(['SYMBOL', 'ACCOUNT'])['ADJUSTED_UNITS'].sum().\
                 reset_index(name='TOTAL_UNITS').query('TOTAL_UNITS > 0').\
                 join(df_positions.set_index('SYMBOL'), on='SYMBOL')
@@ -668,6 +702,19 @@ class SummaryTool(object):
                 df_cash_equivalent['SUBCLASS'] = 'Cash'
                 df_combined = df_combined.append(df_cash_equivalent[[
                     'SYMBOL', 'INVESTMENT_TYPE', 'DOLLARS', 'ASSET_CLASS', 'SUBCLASS']], ignore_index=True)
+            if df_fixed_final.shape[0] > 0:
+                df_fixed_final['SYMBOL'] = 'n/a'
+                df_fixed_final['ASSET_CLASS'] = 'Fixed Income'
+                df_fixed_final['INVESTMENT_TYPE'] = 'Bond/CD'
+                df_fixed_final['SUBCLASS'] = df_fixed_final['TYPE']
+                # dev
+                print('test...')
+                print(df_fixed_final)
+                df_combined = df_combined.append(df_fixed_final[[
+                    'SYMBOL', 'INVESTMENT_TYPE', 'DOLLARS', 'ASSET_CLASS', 'SUBCLASS']], ignore_index=True)
+                # dev
+                print('test...')
+                print(df_combined)
             df_allocation_class = df_combined['DOLLARS'].groupby(
                 df_combined['ASSET_CLASS']).sum().reset_index(name='ASSET_CLASS_TOTAL_DOLLARS')
             df_allocation_class['ASSET_CLASS_ALLOCATION'] = (
